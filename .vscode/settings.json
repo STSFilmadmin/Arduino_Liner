@@ -1,3 +1,5 @@
 {
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "arduino.path": "C:/Users/Studi/OneDrive/Documents/Arduino/libraries",
+    "cmake.sourceDirectory": "${workspaceFolder}/vcpkg/ports/7zip"
 }
