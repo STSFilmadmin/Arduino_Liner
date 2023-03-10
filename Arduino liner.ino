@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include <Arduino.h>
 
 // Енкодер колеса
 #define ENCODER_PIN_A 2
