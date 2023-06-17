@@ -1,0 +1,90 @@
+boolean butt1_flag = 0;
+boolean butt1;
+boolean butt2_flag = 0;
+boolean butt2;
+boolean butt3_flag = 0;
+boolean butt3;
+
+#define ENC_A 2       // пін енкодера
+#define ENC_B 3       // пін енкодера
+#define ENC_TYPE 1    // тип енкодера, 0 або 1
+volatile long encCounter;
+String s1;
+float met1 = 0.0001953125;
+float met;
+volatile boolean state0, lastState, turnFlag;
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2); // адреса 0x27 або 0x3f
+
+unsigned long  last_time;   
+void setup() {
+  Serial.begin(9600);
+  attachInterrupt(digitalPinToInterrupt(ENC_A), int0, CHANGE);
+  pinMode(4, INPUT_PULLUP);
+  pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("METPIB: 0");
+}
+void int0() {
+  state0 = digitalRead(ENC_A);
+  if (state0 != lastState) {
+#if (ENC_TYPE == 1)
+    turnFlag = !turnFlag;
+    if (turnFlag)
+      encCounter += (digitalRead(ENC_B) != lastState) ? -1 : 1;
+#else
+    encCounter += (digitalRead(ENC_B) != lastState) ? -1 : 1;
+#endif
+    lastState = state0;
+  }
+}
+void loop() {
+  boolean but1 = !digitalRead(4);
+  boolean but2 = !digitalRead(5);
+  boolean but3 = digitalRead(6);
+
+  met = met1 * encCounter;
+
+  if (millis() - last_time > 100) {
+    last_time = millis(); 
+    lcd.setCursor(9, 0);
+    lcd.print("        ");
+    lcd.setCursor(8, 0);
+    lcd.print(met);
+    Serial.println(met);
+  }
+
+  if (but1 == 1 && butt1_flag == 0) {
+    butt1_flag = 1;
+    encCounter += 512;
+    lcd.setCursor(9, 0);
+    lcd.print("       ");
+    lcd.setCursor(8, 0);
+    lcd.print(met);
+  }
+
+  if (but1 == 0 && butt1_flag == 1) {
+    butt1_flag = 0;
+  }
+
+  if (but3 == 0) {
+    encCounter = 0;
+    lcd.setCursor(9, 0);
+    lcd.print("       ");
+    lcd.setCursor(8, 0);
+    lcd.print(met);
+  }
+
+  if (but2 == 1 && butt2_flag == 0) {
+    butt2_flag = 1;
+    encCounter -= 512;
+  }
+
+  if (but2 == 0 && butt2_flag == 1) {
+    butt2_flag = 0;
+  }
+}
