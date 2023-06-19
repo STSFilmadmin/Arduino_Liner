@@ -89,8 +89,6 @@ void loop() {
     lcd.print(myString);
     Serial.println(met, 8);
     Serial.println(encCounter);
-    Serial.println(met);
-    Serial.println(previousMet + myString + myString);
   }
 
   
