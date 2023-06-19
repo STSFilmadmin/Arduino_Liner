@@ -1,0 +1,40 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Arduino.h>
+
+// Піни кнопок
+#define BUTTON_DECREASE_PIN 4
+#define BUTTON_INCREASE_PIN 5
+#define BUTTON_RESET_PIN 6
+
+// Дисплей
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // Адреса дисплея: 0x27, 16 стовпців, 2 рядки
+
+void setup() {
+  lcd.begin(16, 2);  // Ініціалізація дисплея
+  lcd.print("Hello");  // Виведення слова "Hello" на початку
+}
+
+void loop() {
+  // Отримання стану кнопок
+  bool buttonDecreaseState = digitalRead(BUTTON_DECREASE_PIN);
+  bool buttonIncreaseState = digitalRead(BUTTON_INCREASE_PIN);
+  bool buttonResetState = digitalRead(BUTTON_RESET_PIN);
+
+  // Виведення відповідного значення на дисплей при натисканні кнопок
+  if (buttonDecreaseState == LOW) {
+    lcd.clear();  // Очистити дисплей
+    lcd.print("1");  // Вивести "1"
+    delay(200);  // Затримка для стабілізації відображення
+  }
+  else if (buttonIncreaseState == LOW) {
+    lcd.clear();  // Очистити дисплей
+    lcd.print("2");  // Вивести "2"
+    delay(200);  // Затримка для стабілізації відображення
+  }
+  else if (buttonResetState == LOW) {
+    lcd.clear();  // Очистити дисплей
+    lcd.print("3");  // Вивести "3"
+    delay(200);  // Затримка для стабілізації відображення
+  }
+}
