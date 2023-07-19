@@ -25,7 +25,53 @@
 
 */
 
+/*
+  #include <SoftwareSerial.h>
 
+SoftwareSerial printerSerial(10, 11); // Піни TX і RX для з'єднання з принтером
+
+void setup() {
+  Serial.begin(9600);
+  printerSerial.begin(9600); // Швидкість передачі даних для принтера
+}
+
+void loop() {
+  // Ваш код основної програми
+  // ...
+  
+  if (currentButtonState == LOW && !printButtonFlag) {
+    // Встановлюємо флажок для кнопки друку
+    printButtonFlag = true;
+
+    // Задаємо значення met типу long
+    long metValue = 265; // Замініть на ваше значення
+
+    // Перетворюємо значення met в String
+    String metString = String(metValue, 2); // 2 означає 2 десяткові знаки
+
+    // Комбінуємо значення із словом "метрів"
+    String data = metString + " метрів";
+
+    // Надсилаємо дані на принтер
+    printToPrinter(data);
+  }
+
+  // Перевіряємо, чи кнопка була відпущена (стан з LOW на HIGH)
+  if (currentButtonState == HIGH && printButtonFlag) {
+    // Знімаємо флажок для кнопки друку, щоб дозволити друкувати знову при наступному натисканні
+    printButtonFlag = false;
+  }
+}
+
+void printToPrinter(String data) {
+  // Відправляємо дані на принтер через Serial порт (SoftwareSerial для зовнішнього принтера)
+  // Наприклад, використовуємо команду "println" для друку тексту
+  printerSerial.println(data);
+}
+
+  
+  
+  */
 
 
 #include <Wire.h>
