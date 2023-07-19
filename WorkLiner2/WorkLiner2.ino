@@ -13,6 +13,8 @@
   Пін 4: Підключений до першого контакту кнопки 2 нормально розімкнута віднімання значення -. 
   Пін 5: Підключений до першого контакту кнопки 1 нормально розімкнута добавлення знаяення +.
   Пін 6: Підключений до першого контакту кнопки 3 нормально замкнута скидання значення на 0.
+  Пін 7: Підключений до першого контакту кнопки 4 нормально замкнута друк.
+
   Підключення LCD дисплея через I2C до Arduino:
 
   SDA: Підключений до відповідного піна Arduino (зазвичай A4) .
@@ -77,6 +79,8 @@ void printToPrinter(String data) {
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Encoder.h>
+#include <SoftwareSerial.h>
+
 
 #define ENC_A 2        // Пін енкодера
 #define ENC_B 3        // Пін енкодера
@@ -96,10 +100,14 @@ volatile boolean state0, lastState, turnFlag;
 boolean butt1_flag = 0;
 boolean butt2_flag = 0;
 boolean butt3_flag = 0;
+boolean butt4_flag = 0;
+
 
 unsigned long last_time = 0; // Оголошення змінної last_time
 unsigned long backlight_timer = 0; // Оголошення змінної backlight_timer
 unsigned long time_lcd_backlight = 10 * 1000; // Оголошення змінної backlight_timer для встановлення часу підсвічування lcd (секунди потріно перемножити на 1000 мілісекунд)
+
+SoftwareSerial printerSerial(10, 11); // Піни TX і RX для з'єднання з принтером
 
 
 void int0() {
@@ -118,10 +126,12 @@ void int0() {
 
 void setup() {
   Serial.begin(9600);
+  printerSerial.begin(9600); // Швидкість передачі даних для принтера
   attachInterrupt(digitalPinToInterrupt(ENC_A), int0, CHANGE);
   pinMode(4, INPUT_PULLUP);
   pinMode(5, INPUT_PULLUP);
   pinMode(6, INPUT_PULLUP);
+  pinMode(7, INPUT_PULLUP);
 
   lcd.init();
   lcd.backlight();
@@ -132,6 +142,7 @@ void loop() {
   boolean but1 = !digitalRead(5);
   boolean but2 = !digitalRead(4);
   boolean but3 = !digitalRead(6); // Зчитувати кнопку з контактом, який замкнутий при натисканні
+  boolean but4 = !digitalRead(7); // Зчитувати кнопку з контактом, який замкнутий при натисканні
 
   float previousMet = met;
   met = met1 * encCounter;
@@ -187,4 +198,22 @@ void loop() {
   if (but2 == 0 && butt2_flag == 1) {
     butt2_flag = 0;
   }
+}
+
+if (but4 == 1 && butt4_flag == 0) { // Зміна умови перевірки для кнопки обнулення
+    butt4_flag = 1;
+  
+  String metString = String(met, 3); // 2 означає 2 десяткові знаки
+    String data = metString + " метрів";
+    printToPrinter(data); // Надсилаємо дані на принтер
+  
+   }
+
+  if (but4 == 0 && butt4_flag == 1) {
+    butt4_flag = 0;
+  }
+void printToPrinter(String data) {
+  // Відправляємо дані на принтер через Serial порт (SoftwareSerial для зовнішнього принтера)
+  // Наприклад, використовуємо команду "println" для друку тексту
+  printerSerial.println(data);
 }
