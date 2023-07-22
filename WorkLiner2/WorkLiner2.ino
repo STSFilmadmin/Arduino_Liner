@@ -140,9 +140,9 @@ void setup() {
 
 void loop() {
   boolean but1 = !digitalRead(5);
-  boolean but2 = !digitalRead(4);
-  boolean but3 = !digitalRead(6); // Зчитувати кнопку з контактом, який замкнутий при натисканні
-  boolean but4 = !digitalRead(7); // Зчитувати кнопку з контактом, який замкнутий при натисканні
+  boolean but2 = !digitalRead(8);
+  boolean but3 = digitalRead(6); // Зчитувати кнопку з контактом, який замкнутий при натисканні
+  boolean but4 = digitalRead(7); // Зчитувати кнопку з контактом, який замкнутий при натисканні
 
   float previousMet = met;
   met = met1 * encCounter;
@@ -198,7 +198,7 @@ void loop() {
   if (but2 == 0 && butt2_flag == 1) {
     butt2_flag = 0;
   }
-}
+
 
 if (but4 == 1 && butt4_flag == 0) { // Зміна умови перевірки для кнопки обнулення
     butt4_flag = 1;
@@ -211,6 +211,7 @@ if (but4 == 1 && butt4_flag == 0) { // Зміна умови перевірки 
 
   if (but4 == 0 && butt4_flag == 1) {
     butt4_flag = 0;
+    }
   }
 void printToPrinter(String data) {
   // Відправляємо дані на принтер через Serial порт (SoftwareSerial для зовнішнього принтера)
