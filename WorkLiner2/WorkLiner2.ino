@@ -204,7 +204,7 @@ if (but4 == 1 && butt4_flag == 0) { // Зміна умови перевірки 
     butt4_flag = 1;
   
   String metString = String(met, 3); // 2 означає 2 десяткові знаки
-    String data = metString + " метрів";
+    String data = "^XA^FO50,50^A0N,30,30^FD" + metString + " метрів^FS^XZ";
     printToPrinter(data); // Надсилаємо дані на принтер
   
    }
